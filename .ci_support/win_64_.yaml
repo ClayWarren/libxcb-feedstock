@@ -3,11 +3,11 @@ channel_sources:
 channel_targets:
 - conda-forge main
 libxcb:
-- '1.16'
+- '1'
 m2w64_c_compiler:
 - gcc
 m2w64_c_compiler_version:
-- '13'
+- '14'
 m2w64_c_stdlib:
 - m2w64-sysroot
 m2w64_c_stdlib_version:
