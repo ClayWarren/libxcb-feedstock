@@ -6,5 +6,6 @@ c_stdlib_version:           # [win]
   - 12                      # [win]
 c_compiler:                 # [win]
   - gcc                     # [win]
+# stay on older version due to -Wincompatible-pointer-types errors
 c_compiler_version:         # [win]
-  - 15                      # [win]
+  - 13                      # [win]
