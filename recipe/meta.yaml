@@ -46,7 +46,8 @@ requirements:
     - xorg-libxau
     - xorg-libxdmcp
     - xorg-util-macros
-    - xcb-proto {{ version }}
+    # disabled while bootstrapping
+    - xcb-proto {{ version }}       # [not riscv64]
     - xorg-xorgproto
   run:
     - pthread-stubs
