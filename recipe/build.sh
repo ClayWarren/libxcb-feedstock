@@ -67,6 +67,11 @@ configure_args=(
     --disable-silent-rules
 )
 
+if [[ $target_platform == "linux-riscv64" ]]; then
+    # use xcb-proto from BUILD_PREFIX while bootstrapping riscv
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$BUILD_PREFIX/share/pkgconfig"
+fi
+
 ./configure "${configure_args[@]}"
 make -j$CPU_COUNT
 make install
