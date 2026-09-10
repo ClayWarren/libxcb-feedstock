@@ -7,7 +7,8 @@ cp "$BUILD_PREFIX/share/gnuconfig/"config.* build-aux/
 export CFLAGS="$CFLAGS -std=gnu17"
 export LIBS="${LIBS:-} -lpthread -lws2_32"
 export PYTHON="$BUILD_PREFIX/python.exe"
-export PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig:$BUILD_PREFIX/Library/share/pkgconfig"
+# Native pkg-config uses semicolons; colons also occur in Windows drive paths.
+export PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig;$PREFIX/share/pkgconfig;$BUILD_PREFIX/Library/share/pkgconfig"
 export PATH="$PWD/src/.libs:$PATH"
 
 # DRI3 and Present require Unix file-descriptor passing, unavailable on Win32.
