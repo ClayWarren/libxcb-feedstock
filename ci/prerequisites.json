@@ -1,0 +1,20 @@
+[
+  {
+    "file": "libwinpthread-13.0.0.r560.g3197fc7d6.1-ha03c420_0.conda",
+    "sha256": "ad493814314277641c367b46ceb5e18f5dd4e07f6de9408ed627dfba09cee07a",
+    "repository": "libxcb",
+    "artifact": 10135535052
+  },
+  {
+    "file": "winpthreads-13.0.0.r560.g3197fc7d6.1-hfbbf558_0.conda",
+    "sha256": "a3d1e4a56247dfb8fc37bae2dd5caef21b4e5d739bde0565edb5c1f15427d4d6",
+    "repository": "libxcb",
+    "artifact": 10135535052
+  },
+  {
+    "file": "xorg-libxdmcp-1.1.5-hfbbf558_2.conda",
+    "sha256": "bf78877fc2c6f7c5be05b928f25ecb56ed1b4346143724c3d19afdef9a433db8",
+    "repository": "libxcb",
+    "artifact": 10135535052
+  }
+]
