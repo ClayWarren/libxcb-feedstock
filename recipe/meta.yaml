@@ -24,7 +24,8 @@ build:
 
 requirements:
   build:
-    - python                        # [build_platform != target_platform or (win and arm64)]
+    - python                        # [build_platform != target_platform and not (win and arm64)]
+    - python >=3.14                 # [win and arm64]
     - xcb-proto {{ version }}       # [build_platform != target_platform or (win and arm64)]
     # Keep the x64 MinGW toolchain; ARM64 uses native Clang with the MSVC runtime.
     - {{ stdlib("c") }}
@@ -59,7 +60,7 @@ requirements:
 
 test:
   requires:
-    - python  # [win and arm64]
+    - python >=3.14  # [win and arm64]
     - {{ compiler('c') }}  # [win and arm64]
     - {{ stdlib('c') }}  # [win and arm64]
   files:
