@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: conda-forge xorg-libxdmcp-feedstock maintainers <noreply@conda-forge.org>
+Date: Thu, 3 Sep 2026 00:00:00 +0000
+Subject: [PATCH] Avoid redefining the Windows getpid mapping
+
+X11/Xos.h already maps getpid to _getpid for MSVC through Xw32defs.h.
+Keep the source fallback for Windows environments where that mapping is
+not present, without replacing the object-like macro with an incompatible
+one-argument macro.
+---
+ Key.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Key.c b/Key.c
+--- a/Key.c
++++ b/Key.c
+@@ -53,7 +53,9 @@ getbits (long data, unsigned char *dst)
+ #include <process.h>
+ #define srandom srand
+ #define random rand
++#ifndef getpid
+ #define getpid(x) _getpid(x)
++#endif
+ #endif
+ 
+ /* Solaris 11.3.0 - 11.4.15 only define getentropy() in <sys/random.h> */
+-- 
+2.51.0

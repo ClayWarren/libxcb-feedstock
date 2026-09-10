@@ -1,0 +1,96 @@
+{% set xorg_name = "libXdmcp" %}
+{% set xorg_category = "lib" %}
+{% set name = "xorg-" ~ xorg_name %}
+{% set version = "1.1.5" %}
+{% set sha256 = "d8a5222828c3adab70adf69a5583f1d32eb5ece04304f7f8392b6a353aa2228c" %}
+{% set am_version = "1.16" %} # keep synchronized with build.sh
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ xorg_name }}-{{ version }}.tar.xz
+  sha256: {{ sha256 }}
+  patches:
+    - windows.patch  # [win and x86_64]
+    - win-arm64-msvc.patch  # [win and arm64]
+
+build:
+  number: 2
+  run_exports:
+    - {{ pin_subpackage(name|lower) }}
+
+requirements:
+  build:
+    - m2-autoconf                   # [win and x86_64]
+    - m2-automake{{ am_version }}   # [win and x86_64]
+    - m2-libtool                    # [win and x86_64]
+    - cmake                         # [win and arm64]
+    - ninja                         # [win and arm64]
+    - pkg-config                    # [unix]
+    - m2-pkg-config                 # [win and x86_64]
+    - gnuconfig                     # [unix]
+    - m2-base                       # [win and x86_64]
+    - make                          # [unix]
+    - m2-make                       # [win and x86_64]
+    - gnuconfig  # [unix]
+    - {{ compiler("c") }}           # [unix]
+    - {{ stdlib("c") }}             # [unix]
+    - {{ compiler("c") }}           # [win and arm64]
+    - {{ stdlib("c") }}             # [win and arm64]
+    - {{ compiler("m2w64_c") }}     # [win and x86_64]
+    - {{ stdlib("m2w64_c") }}       # [win and x86_64]
+    - autoconf                      # [unix]
+    - automake                      # [unix]
+    - gettext                       # [unix]
+    - libtool                       # [unix]
+  host:
+    - xorg-util-macros  # [target_platform != "win-arm64"]
+    - xorg-xorgproto
+
+test:
+  requires:
+    - {{ compiler("c") }}  # [win and arm64]
+    - xorg-xorgproto  # [win and arm64]
+  files:
+    - test_xdmcp.c  # [win and arm64]
+  commands:
+    {% set lib_idents = [ "Xdmcp" ] %}
+    {% for lib_ident in lib_idents %}
+    - test -f $PREFIX/lib/lib{{ lib_ident }}.dylib  # [osx]
+    - test -f $PREFIX/lib/lib{{ lib_ident }}.so  # [linux]
+    - if not exist %PREFIX%/Library/lib/lib{{ lib_ident }}.dll.a exit /b 1  # [win and x86_64]
+    - if not exist %PREFIX%/Library/bin/msys-{{ lib_ident }}-*.dll exit /b 1  # [win and x86_64]
+    {% endfor %}
+    - if not exist %LIBRARY_INC%\X11\Xdmcp.h exit /b 1  # [win and arm64]
+    - if not exist %LIBRARY_LIB%\Xdmcp.lib exit /b 1  # [win and arm64]
+    - if not exist %LIBRARY_BIN%\Xdmcp-6.dll exit /b 1  # [win and arm64]
+    - if not exist %LIBRARY_LIB%\pkgconfig\xdmcp.pc exit /b 1  # [win and arm64]
+    - 'findstr /C:"Requires: xproto" "%LIBRARY_LIB%\pkgconfig\xdmcp.pc"'  # [win and arm64]
+    - if errorlevel 1 exit /b 1  # [win and arm64]
+    - call %CC% /nologo /MD /W4 /I"%LIBRARY_INC%" test_xdmcp.c /link /LIBPATH:"%LIBRARY_LIB%" Xdmcp.lib /OUT:xdmcp_consumer.exe  # [win and arm64]
+    - if errorlevel 1 exit /b 1  # [win and arm64]
+    - set "PATH=%LIBRARY_BIN%;%PATH%"  # [win and arm64]
+    - xdmcp_consumer.exe  # [win and arm64]
+    - if errorlevel 1 exit /b 1  # [win and arm64]
+    - dumpbin /exports "%LIBRARY_BIN%\Xdmcp-6.dll" | findstr /C:"XdmcpWriteHeader"  # [win and arm64]
+    - if errorlevel 1 exit /b 1  # [win and arm64]
+    - dumpbin /imports "%LIBRARY_BIN%\Xdmcp-6.dll" | findstr /I /C:"WS2_32.dll"  # [win and arm64]
+    - if errorlevel 1 exit /b 1  # [win and arm64]
+    - dumpbin /headers "%LIBRARY_BIN%\Xdmcp-6.dll" | findstr /I /C:"AA64 machine (ARM64)"  # [win and arm64]
+    - if errorlevel 1 exit /b 1  # [win and arm64]
+    - dumpbin /headers xdmcp_consumer.exe | findstr /I /C:"AA64 machine (ARM64)"  # [win and arm64]
+    - if errorlevel 1 exit /b 1  # [win and arm64]
+
+about:
+  home: https://www.x.org/
+  dev_url: https://gitlab.freedesktop.org/xorg/lib/libxdmcp
+  license: MIT
+  license_family: MIT
+  license_file: COPYING
+  summary: 'The X-windows display manager client protocol library.'
+
+extra:
+  recipe-maintainers:
+    - pkgw
