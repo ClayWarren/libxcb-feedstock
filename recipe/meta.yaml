@@ -54,6 +54,7 @@ requirements:
     - xorg-xorgproto
   run:
     - libwinpthread                 # [win and arm64]
+    - winpthreads                   # [win and arm64]
     - xorg-xorgproto                # [win and arm64]
     - pthread-stubs
     - xorg-libxau
