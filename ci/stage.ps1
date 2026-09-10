@@ -1,6 +1,8 @@
 param([string]$Subdir)
 New-Item -ItemType Directory -Path native-results -Force | Out-Null
 Get-ChildItem "C:\libxcb-local\$Subdir\*.conda", "C:\libxcb-local\$Subdir\sha256.json" -ErrorAction SilentlyContinue | Copy-Item -Destination native-results
+# Preserve packages that built but failed consumer tests for diagnosis.
+Get-ChildItem 'C:\libxcb-build\broken\*.conda' -ErrorAction SilentlyContinue | Copy-Item -Destination native-results
 
 $root = 'C:\libxcb-build'
 if (Test-Path $root) {
