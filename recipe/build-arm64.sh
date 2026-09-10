@@ -4,6 +4,10 @@ set -euxo pipefail
 # The shell is MSYS2; Clang and all generated code target native ARM64/MSVC.
 export PREFIX="$PREFIX/Library"
 cp "$BUILD_PREFIX/share/gnuconfig/"config.* build-aux/
+# The patch updates configure and its macro sources together. Preserve the
+# release-generated files instead of regenerating them with another Automake.
+touch aclocal.m4 configure src/config.h.in \
+    Makefile.in src/Makefile.in tests/Makefile.in doc/Makefile.in man/Makefile.in
 export CFLAGS="$CFLAGS -std=gnu17"
 export LIBS="${LIBS:-} -lpthread -lws2_32"
 export PYTHON="$BUILD_PREFIX/python.exe"
