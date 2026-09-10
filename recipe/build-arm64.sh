@@ -10,6 +10,10 @@ touch aclocal.m4 configure src/config.h.in \
     Makefile.in src/Makefile.in tests/Makefile.in doc/Makefile.in man/Makefile.in
 export CFLAGS="$CFLAGS -std=gnu17"
 export LIBS="${LIBS:-} -lpthread -lws2_32"
+# The release Libtool file-magic test recognizes only x86 Windows imports.
+# Let the native linker validate ARM64 import libraries; installed tests also
+# check the resulting DLL imports and execute consumers.
+export lt_cv_deplibs_check_method=pass_all
 export PYTHON="$BUILD_PREFIX/python.exe"
 # Native pkg-config uses semicolons; colons also occur in Windows drive paths.
 export PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig;$PREFIX/share/pkgconfig;$BUILD_PREFIX/Library/share/pkgconfig"
