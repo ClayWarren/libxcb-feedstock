@@ -93,3 +93,16 @@ This patch is applied only to the native Windows ARM64 build.
  
  struct iovec  {
      void *iov_base;    /* Pointer to data.  */
+--- a/src/xcb_util.c
++++ b/src/xcb_util.c
+@@ -359,8 +359,8 @@
+     if(fd < 0)
+         return -1;
+ 
+-    setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &on, sizeof(on));
+-    setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &on, sizeof(on));
++    setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (const char *)&on, sizeof(on));
++    setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, (const char *)&on, sizeof(on));
+ 
+     return connect(fd, addr, addrlen);
+ }
