@@ -34,6 +34,7 @@ requirements:
     - m2-automake{{ am_version }}   # [win and not arm64]
     - m2-libtool                    # [win and not arm64]
     - pkg-config                    # [unix or arm64]
+    - xorg-util-macros               # [win and arm64]
     - m2-pkg-config                 # [win and not arm64]
     - gnuconfig                     # [unix or arm64]
     - m2-base                       # [win]
