@@ -61,40 +61,13 @@ requirements:
     - xorg-libxdmcp
 
 test:
+  files:
+    - test-libraries.sh  # [unix]
+    - test-libraries.bat  # [win]
   commands:
-    {% set lib_idents = [
-      "xcb",
-      "xcb-composite",
-      "xcb-damage",
-      "xcb-dpms",
-      "xcb-dri2",
-      "xcb-glx",
-      "xcb-present",
-      "xcb-randr",
-      "xcb-record",
-      "xcb-res",
-      "xcb-screensaver",
-      "xcb-shape",
-      "xcb-shm",
-      "xcb-sync",
-      "xcb-xf86dri",
-      "xcb-xfixes",
-      "xcb-xinerama",
-      "xcb-xkb",
-      "xcb-xtest",
-      "xcb-xv",
-      "xcb-xvmc",
-    ] %}
-    {% set lib_idents = lib_idents + ['xcb-dri3', 'xcb-render', 'xcb-xinput'] %}  # [not win]
-    {% for lib_ident in lib_idents %}
-    - test -f $PREFIX/lib/lib{{ lib_ident }}.dylib  # [osx]
-    - test -f $PREFIX/lib/lib{{ lib_ident }}.so  # [linux]
-    - if not exist %PREFIX%/Library/lib/lib{{ lib_ident }}.dll.a exit /b 1  # [win and not arm64]
-    - if not exist %PREFIX%/Library/bin/msys-{{ lib_ident }}-*.dll exit /b 1  # [win and not arm64]
-    {% endfor %}
-
-    - if not exist %LIBRARY_BIN%\xcb-1.dll exit 1  # [win and arm64]
-    - if not exist %LIBRARY_LIB%\xcb.lib exit 1  # [win and arm64]
+    - bash test-libraries.sh  # [unix]
+    - call test-libraries.bat mingw  # [win and not arm64]
+    - call test-libraries.bat arm64  # [win and arm64]
 
 about:
   home: http://xcb.freedesktop.org/
