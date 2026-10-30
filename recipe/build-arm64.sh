@@ -19,9 +19,15 @@ export PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig;$PREFIX/share/pkgconfig;$BUILD_PRE
 export PATH="$PWD/src/.libs:$PATH"
 
 # DRI3 and Present require Unix file-descriptor passing, unavailable on Win32.
-./configure --build=aarch64-pc-mingw32 --host=aarch64-pc-mingw32 \
-    --prefix="$PREFIX" --disable-static --disable-dependency-tracking \
-    --disable-selective-werror --disable-devel-docs --without-doxygen \
+./configure \
+    --build=aarch64-pc-mingw32 \
+    --host=aarch64-pc-mingw32 \
+    --prefix="$PREFIX" \
+    --disable-static \
+    --disable-dependency-tracking \
+    --disable-selective-werror \
+    --disable-devel-docs \
+    --without-doxygen \
     --disable-present
 make -j"$CPU_COUNT"
 make check -j"$CPU_COUNT"
